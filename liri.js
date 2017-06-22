@@ -12,6 +12,7 @@ var client = new Twitter({
   access_token_key: '876496954456383488-iqhfAbGXryQqxOZ9oXEMEOOseoc7cO2',
   access_token_secret: 'iaLZr8bRp4X3KBEFjlG1ZHfGTyxXKQlyqGnmRvM4ox9jh'
 });
+var myTweets = "PaulPostsTweets";
 // Spotify:
 var spotify = new Spotify({
 	id: "3744b9af059d466096c9e3b23ca31506",
@@ -24,7 +25,7 @@ var item = process.argv[3];
 // If else tree with commands:
 // Spotify:
 if (cmd === "spotify-this-song") {
-	spotify.search({ type: 'track', query: item }).then(function(response) {
+	spotify.search({ type: 'track', query: item, limit: 1 }).then(function(response) {
 		console.log(response);
 		});
 }
@@ -65,10 +66,14 @@ if (cmd === "movie-this" && item != undefined) {
 
 // Fetch Tweets:
 if (cmd === "my-tweets") {
-	client.get('favorites/lists', function(error, PaulPostsTweets, response) {
+	// Pulls tweets by my username and displays the latest 20:
+	client.get('statuses/user_timeline.json?screen_name=PaulPostsTweets&count=20', function(error, tweets, response) {
 		if (error) {
 			console.log(error);
 		}
-		console.log(PaulPostsTweets);
+		// Prints the text property of each of tweets pulled:
+		for (var i = 0; i < tweets.length; i++) {
+			console.log(tweets[i].text);
+		}
 	});
 }
