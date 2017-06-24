@@ -20,13 +20,21 @@ var spotify = new Spotify({
 });
 // sets the command and queries to entries in command line:
 var cmd = process.argv[2];
-var item = process.argv[3];
+var item = process.argv.slice(3);
 
 // If else tree with commands:
 // Spotify:
 if (cmd === "spotify-this-song") {
-	spotify.search({ type: 'track', query: item, limit: 1 }).then(function(response) {
-		console.log(response);
+	spotify.search({
+	type: 'track',
+	query: item,
+	limit: 1
+	 }).then(function(response) {
+	 	console.log(item);
+		console.log("Title: " +  response.tracks.items[0].name)
+		console.log("Artist: " + response.tracks.items[0].artists[0].name);
+		console.log("Album: " + response.tracks.items[0].album.name);
+		console.log("Preview link: " + response.tracks.items[0].preview_url);
 		});
 }
 
@@ -48,7 +56,7 @@ function movieDisplay(body){
   });
 }
 
-// Dispalys Mr Nobody:
+// Displays movie info:
 if (cmd === "movie-this" && item != undefined) {
 	request("http://www.omdbapi.com/?t=" + item + "&y=&plot=short&apikey=40e9cece", function(error, response, body) {
 		if (!error && response.statusCode === 200) {
@@ -74,6 +82,14 @@ if (cmd === "my-tweets") {
 		// Prints the text property of each of tweets pulled:
 		for (var i = 0; i < tweets.length; i++) {
 			console.log(tweets[i].text);
+		}
+	});
+}
+
+if (cmd === "do-what-it-says") {
+	fs.readFile("random.txt", "utf-8", function(err, data) {
+		if (err) {
+			return console.log(err);
 		}
 	});
 }
